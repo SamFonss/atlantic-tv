@@ -106,7 +106,7 @@ body {
 }
 
 /* ==========================================================================
-   SVG FILTERS FOR GLASS DISTORTION/REFRACTION (shuttletv.pk style)
+   SVG FILTERS FOR GLASS DISTORTION/REFRACTION (true liquid glass)
    ========================================================================== */
 .glass-filters {
   position: absolute;
@@ -115,6 +115,12 @@ body {
   overflow: hidden;
   pointer-events: none;
 }
+
+/*
+   True liquid glass distortion using SVG displacement maps.
+   This creates actual refraction where background content bends/distorts.
+   The filter uses turbulence to simulate water-like surface distortion.
+*/
 
 /* ==========================================================================
    GLASS MORPHISM UTILITIES — Enhanced with Distortion/Refraction
@@ -220,11 +226,11 @@ body {
    ADVANCED GLASS VARIANTS WITH DISTORTION/REFRACTION
    ========================================================================== */
 
-/* Liquid glass - heavy distortion like shuttletv.pk */
+/* Liquid glass - heavy distortion with TRUE REFRACTION */
 .glass-liquid {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(40px) saturate(220%) contrast(110%);
-  -webkit-backdrop-filter: blur(40px) saturate(220%) contrast(110%);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(30px) saturate(200%) contrast(105%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%) contrast(105%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
     var(--shadow-glass-strong),
@@ -234,6 +240,8 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  /* Apply SVG displacement filter for true liquid glass distortion */
+  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='3' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='8' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass");
 }
 
 .glass-liquid::before {
@@ -273,6 +281,48 @@ body {
 .glass-liquid:hover::after,
 .glass-liquid:focus-within::after {
   opacity: 1;
+}
+
+/* Stronger distortion variant for header */
+.glass-liquid-strong {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(220%) contrast(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(220%) contrast(110%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    var(--shadow-glass-strong),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 4px 16px rgba(255, 255, 255, 0.03) inset;
+  border-radius: var(--radius-xl);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Stronger displacement for header passing over content */
+  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass-strong'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='14' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass-strong");
+}
+
+/* Animated liquid glass - distortion moves like water */
+.glass-liquid-animated {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(28px) saturate(200%) contrast(108%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(108%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow-glass-strong);
+  border-radius: var(--radius-xl);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Animated displacement - turbulence evolves over time */
+  animation: liquid-distort 8s ease-in-out infinite;
+}
+
+@keyframes liquid-distort {
+  0%, 100% {
+    filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='d0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='3' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='8'/%3E%3C/filter%3E%3C/svg%3E#d0");
+  }
+  50% {
+    filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='d1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='3' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='12'/%3E%3C/filter%3E%3C/svg%3E#d1");
+  }
 }
 
 /* Refractive glass - chromatic aberration effect */

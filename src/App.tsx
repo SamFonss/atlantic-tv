@@ -253,7 +253,7 @@ function App() {
       </div>
 
       {/* Header */}
-      <header className="glass-liquid" style={{
+      <header className="glass-liquid-strong" style={{
         position: 'sticky', top: 0, zIndex: 50,
         padding: '16px 32px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
