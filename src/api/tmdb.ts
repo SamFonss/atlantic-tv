@@ -163,6 +163,7 @@ class TMDBClient {
   private region: string;
   private genreCache: Map<string, Genre[]> = new Map();
   private imageConfig: TMDBImageConfig | null = null;
+  private isDemoMode: boolean = false;
 
   constructor(config: TMDBConfig) {
     this.apiKey = config.apiKey;
@@ -170,13 +171,17 @@ class TMDBClient {
     this.imageBaseUrl = config.imageBaseUrl || 'https://image.tmdb.org/t/p';
     this.language = config.language || 'en-US';
     this.region = config.region || 'US';
+    this.isDemoMode = !this.apiKey;
   }
 
-  private async request<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
-    const url = new URL(`${this.baseUrl}${endpoint}`);
+  private async request<T>(_endpoint: string, params: Record<string, string> = {}): Promise<T> {
+    if (this.isDemoMode) {
+      return this.getDemoResponse(_endpoint, params);
+    }
+    const url = new URL(`${this.baseUrl}${_endpoint}`);
     url.searchParams.set('api_key', this.apiKey);
     url.searchParams.set('language', this.language);
-    if (this.region && !endpoint.includes('genre')) {
+    if (this.region && !_endpoint.includes('genre')) {
       url.searchParams.set('region', this.region);
     }
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
@@ -187,6 +192,38 @@ class TMDBClient {
       throw new Error(`TMDB API error (${response.status}): ${error.status_message || response.statusText}`);
     }
     return response.json();
+  }
+
+  private getDemoResponse<T>(_endpoint: string, _params: Record<string, string>): T {
+    // Return empty/mock responses for demo mode
+    if (_endpoint.includes('/trending/')) {
+      return { page: 1, results: [], total_pages: 1, total_results: 0 } as T;
+    }
+    if (_endpoint.includes('/discover/')) {
+      return { page: 1, results: [], total_pages: 1, total_results: 0 } as T;
+    }
+    if (_endpoint.includes('/search/')) {
+      return { page: 1, results: [], total_pages: 1, total_results: 0 } as T;
+    }
+    if (_endpoint.includes('/genre/')) {
+      return { genres: [] } as T;
+    }
+    if (_endpoint.includes('/configuration')) {
+      return { images: { base_url: '', secure_base_url: '', backdrop_sizes: [], logo_sizes: [], poster_sizes: [], profile_sizes: [], still_sizes: [] } } as T;
+    }
+    if (_endpoint.includes('/videos') || _endpoint.includes('/credits') || _endpoint.includes('/images') || _endpoint.includes('/external_ids') || _endpoint.includes('/watch/providers') || _endpoint.includes('/content_ratings')) {
+      return { results: [] } as T;
+    }
+    if (_endpoint.includes('/movie/') || _endpoint.includes('/tv/')) {
+      // Return minimal movie/tv details
+      return {
+        id: 0, title: '', name: '', overview: '', poster_path: null, backdrop_path: null,
+        vote_average: 0, vote_count: 0, popularity: 0, genre_ids: [], adult: false,
+        genres: [], runtime: 0, episode_run_time: [], number_of_seasons: 0, number_of_episodes: 0,
+        first_air_date: '', last_air_date: '', status: '', tagline: ''
+      } as T;
+    }
+    return {} as T;
   }
 
   /* ========================================================================
@@ -435,7 +472,8 @@ export function createTMDBClient(config: TMDBConfig): TMDBClient {
 
 export function getTMDBClient(): TMDBClient {
   if (!tmdbInstance) {
-    throw new Error('TMDBClient not initialized. Call createTMDBClient() first.');
+    // Return a client with empty API key for demo mode
+    tmdbInstance = new TMDBClient({ apiKey: '' });
   }
   return tmdbInstance;
 }

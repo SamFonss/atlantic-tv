@@ -71,10 +71,44 @@ function App() {
     },
   });
 
+  // Demo data for when no API key is configured
+  const getDemoData = useCallback(() => {
+    const demoMovies: MediaItem[] = [
+      { id: 1, title: 'The Matrix', original_title: 'The Matrix', overview: 'A computer hacker learns about the true nature of reality.', poster_path: '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', backdrop_path: '/ncE7wAeL2dH5pQgDqhhpjrJ3YbB.jpg', vote_average: 8.7, vote_count: 25000, popularity: 150, genre_ids: [28, 878], adult: false, media_type: 'movie', release_date: '1999-03-31', video: false },
+      { id: 2, title: 'Inception', original_title: 'Inception', overview: 'A thief who steals corporate secrets through dream-sharing technology.', poster_path: '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', backdrop_path: '/s3TBrRGB1iav7gFOCNx3H31MoES.jpg', vote_average: 8.8, vote_count: 30000, popularity: 140, genre_ids: [28, 878, 53], adult: false, media_type: 'movie', release_date: '2010-07-15', video: false },
+      { id: 3, title: 'Interstellar', original_title: 'Interstellar', overview: 'A team of explorers travel through a wormhole in space.', poster_path: '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', backdrop_path: '/xJHokMbljvjADYdit5fK5VQsXEG.jpg', vote_average: 8.6, vote_count: 28000, popularity: 130, genre_ids: [12, 18, 878], adult: false, media_type: 'movie', release_date: '2014-11-05', video: false },
+      { id: 4, title: 'The Dark Knight', original_title: 'The Dark Knight', overview: 'Batman faces the Joker in this crime thriller.', poster_path: '/qJ2tW6WMUDux911r6m7haRef0WH.jpg', backdrop_path: '/hqkIcbrOHL86UncnHIsHVcVmzue.jpg', vote_average: 9.0, vote_count: 35000, popularity: 160, genre_ids: [28, 80, 18], adult: false, media_type: 'movie', release_date: '2008-07-18', video: false },
+      { id: 5, title: 'Pulp Fiction', original_title: 'Pulp Fiction', overview: 'The lives of two mob hitmen, a boxer, and others intertwine.', poster_path: '/d5iIlFn5s0ImszYzBPb8JPIfbX.jpg', backdrop_path: '/mteyOYgmJpKxKz1Z4vz4vz4vz4v.jpg', vote_average: 8.9, vote_count: 22000, popularity: 120, genre_ids: [80, 18], adult: false, media_type: 'movie', release_date: '1994-10-14', video: false },
+      { id: 6, title: 'Fight Club', original_title: 'Fight Club', overview: 'An insomniac office worker forms an underground fight club.', poster_path: '/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg', backdrop_path: '/8uO0gL8ZxJjL8Z8Z8Z8Z8Z8Z8Z8.jpg', vote_average: 8.8, vote_count: 24000, popularity: 110, genre_ids: [18], adult: false, media_type: 'movie', release_date: '1999-10-15', video: false },
+      { id: 7, title: 'Forrest Gump', original_title: 'Forrest Gump', overview: 'The presidencies of Kennedy and Johnson through the eyes of an Alabama man.', poster_path: '/arw2vcBveWOVZr6Zd9Dd9f4k4k4.jpg', backdrop_path: '/k4k4k4k4k4k4k4k4k4k4k4k4k4k.jpg', vote_average: 8.8, vote_count: 20000, popularity: 100, genre_ids: [18, 35], adult: false, media_type: 'movie', release_date: '1994-07-06', video: false },
+      { id: 8, title: 'The Shawshank Redemption', original_title: 'The Shawshank Redemption', overview: 'Two imprisoned men bond over a number of years.', poster_path: '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg', backdrop_path: '/x333333333333333333333333333.jpg', vote_average: 9.3, vote_count: 30000, popularity: 170, genre_ids: [18], adult: false, media_type: 'movie', release_date: '1994-09-23', video: false },
+    ];
+    const demoTV: MediaItem[] = [
+      { id: 101, name: 'Breaking Bad', original_name: 'Breaking Bad', overview: 'A chemistry teacher turns to manufacturing meth.', poster_path: '/ggFHVNu6YYI5L9pCfOacjizRGt.jpg', backdrop_path: '/tsRy63Mu5Cu8etL1X7ZLyf7UP1M.jpg', vote_average: 9.5, vote_count: 15000, popularity: 200, genre_ids: [80, 18, 53], adult: false, media_type: 'tv', first_air_date: '2008-01-20', origin_country: ['US'] },
+      { id: 102, name: 'Game of Thrones', original_name: 'Game of Thrones', overview: 'Nine noble families fight for control of the Iron Throne.', poster_path: '/u3bZgnGQ9T01sW1yeve3w3w3w3w3w3w3.jpg', backdrop_path: '/suopoADq0k8YZr4dQXcU6pZT6Zw.jpg', vote_average: 9.3, vote_count: 18000, popularity: 190, genre_ids: [10765, 18, 10759], adult: false, media_type: 'tv', first_air_date: '2011-04-17', origin_country: ['US'] },
+      { id: 103, name: 'Stranger Things', original_name: 'Stranger Things', overview: 'Kids encounter supernatural forces in 1980s Indiana.', poster_path: '/49WJfeN0moxb9IPfGn8ZqZqZqZqZqZqZ.jpg', backdrop_path: '/56YOx7YqZ4Z4Z4Z4Z4Z4Z4Z4Z4Z4.jpg', vote_average: 8.7, vote_count: 12000, popularity: 180, genre_ids: [10765, 18, 9648], adult: false, media_type: 'tv', first_air_date: '2016-07-15', origin_country: ['US'] },
+      { id: 104, name: 'The Crown', original_name: 'The Crown', overview: 'The reign of Queen Elizabeth II.', poster_path: '/6tG9uJxJxJxJxJxJxJxJxJxJxJxJx.jpg', backdrop_path: '/crown444444444444444444444444.jpg', vote_average: 8.6, vote_count: 8000, popularity: 100, genre_ids: [18, 36], adult: false, media_type: 'tv', first_air_date: '2016-11-04', origin_country: ['GB'] },
+    ];
+    const demoGenres: Record<number, MediaItem[]> = {};
+    GENRE_ROWS.slice(0, 6).forEach(({ id }) => {
+      demoGenres[id] = [...demoMovies.slice(0, 5), ...demoTV.slice(0, 3)].sort((a, b) => b.popularity - a.popularity);
+    });
+    return { demoMovies, demoTV, demoGenres };
+  }, []);
+
   // Load initial data
   useEffect(() => {
     async function loadData() {
-      if (!tmdb) return;
+      if (!tmdb) {
+        // No API key - use demo data
+        const { demoMovies, demoTV, demoGenres } = getDemoData();
+        setTrendingMovies(demoMovies);
+        setTrendingTV(demoTV);
+        setGenreRows(demoGenres);
+        setHeroItem(demoMovies[0]);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
         const [trendingAll, trendingMovie, trendingTVData] = await Promise.all([
