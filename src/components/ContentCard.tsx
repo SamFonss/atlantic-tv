@@ -1,6 +1,6 @@
 /* ==========================================================================
    CONTENT CARD — Poster / Backdrop / Square variants
-   Focusable, animated, glass-morphism
+   Focusable, animated, glass-morphism with distortion/refraction
    ========================================================================== */
 
 import { useFocusable } from '../hooks/useSpatialNavigation';
@@ -52,6 +52,7 @@ export function ContentCard({ item, variant = 'poster', onClick, onPlay, classNa
   const classNames = [
     'content-card',
     `content-card--${variant}`,
+    'glass-liquid distort-medium refract-normal ca-medium',
     className,
   ].filter(Boolean).join(' ');
 
@@ -64,6 +65,17 @@ export function ContentCard({ item, variant = 'poster', onClick, onPlay, classNa
       aria-label={`${title}${year ? ` (${year})` : ''}, ${rating}/10${genreNames ? `, ${genreNames}` : ''}`}
       onClick={() => onClick?.(item)}
       onKeyDown={handleKeyDown}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        e.currentTarget.style.setProperty('--mouse-x', `${x}%`);
+        e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.setProperty('--mouse-x', '50%');
+        e.currentTarget.style.setProperty('--mouse-y', '50%');
+      }}
     >
       {imageUrl ? (
         <img
@@ -76,17 +88,21 @@ export function ContentCard({ item, variant = 'poster', onClick, onPlay, classNa
         <div className="content-card__image skeleton skeleton--poster" aria-hidden="true" />
       )}
 
-      <div className="content-card__overlay">
+      <div className="content-card__overlay glass-frosted">
         <h3 className="content-card__title">{title}</h3>
         <div className="content-card__meta">
           {year && <span>{year}</span>}
-          <span className="content-card__badge">
+          <span className="content-card__badge glass-subtle">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
             {rating}
           </span>
-          {isMovie ? <span className="content-card__badge">Movie</span> : <span className="content-card__badge">Series</span>}
+          {isMovie ? (
+            <span className="content-card__badge glass-subtle">Movie</span>
+          ) : (
+            <span className="content-card__badge glass-subtle">Series</span>
+          )}
         </div>
       </div>
 
@@ -138,10 +154,21 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
   return (
     <section
       ref={ref}
-      className={`hero ${className}`}
+      className={`hero glass-caustic caustics-subtle ${className}`}
       role="region"
       aria-label={`${title} - Featured`}
       onKeyDown={handleKeyDown}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        e.currentTarget.style.setProperty('--mouse-x', `${x}%`);
+        e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.setProperty('--mouse-x', '50%');
+        e.currentTarget.style.setProperty('--mouse-y', '50%');
+      }}
     >
       {backdropPath ? (
         <img
@@ -154,22 +181,22 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
         <div className="hero__background skeleton skeleton--backdrop" aria-hidden="true" />
       )}
 
-      <div className="hero__gradient" aria-hidden="true" />
+      <div className="hero__gradient glass-liquid" aria-hidden="true" />
 
-      <div className="hero__content">
+      <div className="hero__content glass-refractive">
         <div className="hero__badges">
-          {year && <span className="content-card__badge">{year}</span>}
-          <span className="content-card__badge">
+          {year && <span className="content-card__badge glass-subtle">{year}</span>}
+          <span className="content-card__badge glass-subtle">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
             {rating}
           </span>
-          {runtime && <span className="content-card__badge">{runtime}</span>}
+          {runtime && <span className="content-card__badge glass-subtle">{runtime}</span>}
           {'title' in item ? (
-            <span className="content-card__badge">Movie</span>
+            <span className="content-card__badge glass-subtle">Movie</span>
           ) : (
-            <span className="content-card__badge">Series</span>
+            <span className="content-card__badge glass-subtle">Series</span>
           )}
         </div>
 
@@ -187,7 +214,7 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
 
         <div className="hero__actions">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary glass-prism"
             onClick={() => onPlay?.(item)}
             aria-label={`Play ${title}`}
           >
@@ -197,7 +224,7 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
             Play
           </button>
           <button
-            className="btn btn-glass"
+            className="btn btn-glass glass-refractive"
             onClick={() => onMore?.(item)}
             aria-label={`More info about ${title}`}
           >

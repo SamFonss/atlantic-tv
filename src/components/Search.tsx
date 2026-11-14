@@ -83,7 +83,7 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
 
   return (
     <div
-      className="search-overlay glass-panel"
+      className="search-overlay glass-liquid distort-medium caustics-subtle"
       role="dialog"
       aria-modal="true"
       aria-label="Search"
@@ -99,7 +99,7 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
         <input
           ref={inputRef}
           type="search"
-          className="search-input"
+          className="search-input glass-refractive"
           placeholder="Search movies, shows, actors..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -111,7 +111,7 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
         />
 
         {loading && (
-          <div className="flex-center" style={{ padding: '32px', color: 'var(--text-secondary)' }}>
+          <div className="flex-center glass-subtle" style={{ padding: '32px', color: 'var(--text-secondary)', borderRadius: 'var(--radius-lg)' }}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }} aria-hidden="true">
               <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
               <path d="M12 2a10 10 0 0 1 10 10" strokeOpacity="1" />
@@ -135,13 +135,13 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
         )}
 
         {!loading && query.length >= 2 && results.length === 0 && (
-          <div className="flex-center tv-body" style={{ padding: '48px', color: 'var(--text-muted)' }}>
+          <div className="flex-center tv-body glass-frosted" style={{ padding: '48px', color: 'var(--text-muted)', borderRadius: 'var(--radius-lg)' }}>
             No results found
           </div>
         )}
 
         {!query && !loading && (
-          <div className="tv-body" style={{ padding: '48px', color: 'var(--text-muted)', textAlign: 'center' }}>
+          <div className="tv-body glass-frosted" style={{ padding: '48px', color: 'var(--text-muted)', textAlign: 'center', borderRadius: 'var(--radius-lg)' }}>
             Type to search...
           </div>
         )}
@@ -179,14 +179,14 @@ export function CommandPalette({ isOpen, onClose, onAction }: CommandPaletteProp
 
   return (
     <>
-      <div className="command-palette glass-panel" role="dialog" aria-modal="true" aria-label="Commands">
+      <div className="command-palette glass-liquid caustics-normal" role="dialog" aria-modal="true" aria-label="Commands">
         <div style={{ padding: '32px', maxWidth: '480px', margin: '0 auto' }}>
           <h3 className="tv-title-3" style={{ marginBottom: '24px' }}>Commands</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {commands.map((cmd) => (
               <button
                 key={cmd.action}
-                className="btn btn-glass"
+                className="btn btn-glass glass-refractive"
                 style={{ justifyContent: 'space-between', textAlign: 'left' }}
                 onClick={() => { onAction(cmd.action); onClose(); }}
               >

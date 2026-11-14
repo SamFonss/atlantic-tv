@@ -254,7 +254,7 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
   return (
     <div
       ref={overlayRef}
-      className="player-overlay"
+      className="player-overlay glass-liquid"
       role="dialog"
       aria-modal="true"
       aria-label={`Video player: ${title || 'Playing'}`}
@@ -277,19 +277,19 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
       />
 
       {error && (
-        <div className="glass-panel" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '40px', textAlign: 'center', maxWidth: '500px' }}>
+        <div className="glass-panel glass-liquid" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '40px', textAlign: 'center', maxWidth: '500px' }}>
           <h2 className="tv-title-3" style={{ marginBottom: '16px' }}>Playback Error</h2>
           <p className="tv-body" style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>{error}</p>
-          <button className="btn btn-primary" onClick={onClose}>Close</button>
+          <button className="btn btn-primary glass-prism" onClick={onClose}>Close</button>
         </div>
       )}
 
       <div
         ref={controlsRef}
-        className={`player-overlay__controls ${showControls ? '' : 'hidden'}`}
+        className={`player-overlay__controls glass-strong caustics-subtle ${showControls ? '' : 'hidden'}`}
         style={{ opacity: showControls ? 1 : 0, pointerEvents: showControls ? 'auto' : 'none', transition: 'opacity 0.3s ease' }}
       >
-        <div className="player-overlay__progress" ref={progressRef} onClick={handleProgressClick} role="slider" aria-label="Playback progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progressPercent)} tabIndex={0}>
+        <div className="player-overlay__progress glass-refractive" ref={progressRef} onClick={handleProgressClick} role="slider" aria-label="Playback progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progressPercent)} tabIndex={0}>
           <div className="player-overlay__progress-fill" style={{ width: `${progressPercent}%` }} />
           <div className="player-overlay__progress-buffered" style={{ width: `${buffered}%`, background: 'rgba(255,255,255,0.2)' }} />
           <div className="player-overlay__progress-handle" style={{ left: `${progressPercent}%` }} />
@@ -299,19 +299,19 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
           <span className="player-overlay__time">{formatTime(currentTime)} / {formatTime(duration)}</span>
 
           <div className="player-overlay__center">
-            <button className="player-overlay__btn" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 10); resetControlsTimer(); }} aria-label="Rewind 10s">
+            <button className="player-overlay__btn glass-subtle" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 10); resetControlsTimer(); }} aria-label="Rewind 10s">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M11 19V5M7 11l-4 4 4 4" />
               </svg>
             </button>
 
-            <button className="player-overlay__btn" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.min(v.duration, v.currentTime + 10); resetControlsTimer(); }} aria-label="Forward 10s">
+            <button className="player-overlay__btn glass-subtle" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.min(v.duration, v.currentTime + 10); resetControlsTimer(); }} aria-label="Forward 10s">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M13 19V5M17 11l4 4-4 4" />
               </svg>
             </button>
 
-            <button className="player-overlay__btn player-overlay__btn--play" onClick={() => { const v = videoRef.current; if (v) isPlaying ? v.pause() : v.play(); resetControlsTimer(); }} aria-label={isPlaying ? 'Pause' : 'Play'}>
+            <button className="player-overlay__btn player-overlay__btn--play glass-prism" onClick={() => { const v = videoRef.current; if (v) isPlaying ? v.pause() : v.play(); resetControlsTimer(); }} aria-label={isPlaying ? 'Pause' : 'Play'}>
               {isPlaying ? (
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
@@ -323,14 +323,14 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
               )}
             </button>
 
-            <button className="player-overlay__btn" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 30); resetControlsTimer(); }} aria-label="Rewind 30s">
+            <button className="player-overlay__btn glass-subtle" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.max(0, v.currentTime - 30); resetControlsTimer(); }} aria-label="Rewind 30s">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M11 19V5M7 11l-4 4 4 4" />
                 <text x="14" y="17" fontSize="8" fill="currentColor" textAnchor="middle">30</text>
               </svg>
             </button>
 
-            <button className="player-overlay__btn" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.min(v.duration, v.currentTime + 30); resetControlsTimer(); }} aria-label="Forward 30s">
+            <button className="player-overlay__btn glass-subtle" onClick={() => { const v = videoRef.current; if (v) v.currentTime = Math.min(v.duration, v.currentTime + 30); resetControlsTimer(); }} aria-label="Forward 30s">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M13 19V5M17 11l4 4-4 4" />
                 <text x="14" y="17" fontSize="8" fill="currentColor" textAnchor="middle">30</text>
@@ -339,7 +339,7 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button className="player-overlay__btn" onClick={() => { const v = videoRef.current; if (v) { v.muted = !v.muted; setIsMuted(v.muted); } resetControlsTimer(); }} aria-label={isMuted ? 'Unmute' : 'Mute'}>
+            <button className="player-overlay__btn glass-subtle" onClick={() => { const v = videoRef.current; if (v) { v.muted = !v.muted; setIsMuted(v.muted); } resetControlsTimer(); }} aria-label={isMuted ? 'Unmute' : 'Mute'}>
               {isMuted || volume === 0 ? (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M11 5L6 9H2v6h4l5 4V5z" />
@@ -359,7 +359,7 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
               )}
             </button>
 
-            <button className="player-overlay__btn" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
+            <button className="player-overlay__btn glass-subtle" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
               {isFullscreen ? (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M8 3v3a2 2 0 0 1-2 2H3M21 3v3a2 2 0 0 0 2 2h3M3 21v-3a2 2 0 0 0-2-2H3M21 21v-3a2 2 0 0 1 2-2h3" />
@@ -371,7 +371,7 @@ export function Player({ src, poster, title, onClose, onError, autoPlay = true }
               )}
             </button>
 
-            <button className="player-overlay__btn" onClick={onClose} aria-label="Close player">
+            <button className="player-overlay__btn glass-subtle" onClick={onClose} aria-label="Close player">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />

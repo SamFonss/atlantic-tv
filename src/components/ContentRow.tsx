@@ -82,13 +82,13 @@ export function ContentRow({
 
   return (
     <section ref={ref} className={`section ${className}`} aria-labelledby={`${title.replace(/\s+/g, '-').toLowerCase()}-heading`}>
-      <div className="section__header">
+      <div className="section__header glass-subtle" style={{ padding: '8px 16px', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <h2 id={`${title.replace(/\s+/g, '-').toLowerCase()}-heading`} className="section__title tv-title-3">
           {title}
         </h2>
         {onSeeAll && (
           <button
-            className="section__action btn-ghost tv-caption"
+            className="section__action btn-ghost tv-caption glass-refractive"
             onClick={onSeeAll}
             aria-label={`See all ${title}`}
           >
@@ -129,7 +129,7 @@ export function HeroSection({ item, onPlay, onMore, className = '' }: HeroSectio
 
   return (
     <section className={`section ${className}`}>
-      <HeroCard item={item} onPlay={onPlay} onMore={onMore} />
+      <HeroCard item={item} onPlay={onPlay} onMore={onMore} className="glass-caustic caustics-subtle" />
     </section>
   );
 }
