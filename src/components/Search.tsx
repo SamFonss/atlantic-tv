@@ -1,11 +1,15 @@
 /* ==========================================================================
    SEARCH — Overlay search with debounced TMDB queries
+   Uses open-glass-ui Glass component with SDF-based refraction
    ========================================================================== */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ContentCard } from './ContentCard';
 import type { MediaItem } from '../api/tmdb';
 import { getTMDBClient } from '../api/tmdb';
+import { Glass, useSdfFilter, SdfFilterDefinition } from '@open-glass-ui/react';
+import { getMaterialPreset } from '@open-glass-ui/core';
+import type { LensGeometry } from '@open-glass-ui/core';
 
 interface SearchProps {
   isOpen: boolean;
@@ -13,6 +17,13 @@ interface SearchProps {
   onSelect: (item: MediaItem) => void;
   onPlay: (item: MediaItem) => void;
 }
+
+const SEARCH_GEOMETRY: LensGeometry = {
+  kind: 'rounded-rect',
+  width: 720,
+  height: 520,
+  cornerRadius: 24,
+};
 
 export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
   const [query, setQuery] = useState('');
@@ -79,80 +90,129 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
     }
   };
 
+  // SDF filter for the search overlay
+  const filter = useSdfFilter({
+    id: 'search-overlay',
+    width: SEARCH_GEOMETRY.width,
+    height: SEARCH_GEOMETRY.height,
+    geometry: SEARCH_GEOMETRY,
+    material: getMaterialPreset('frosted'),
+    quality: 'medium',
+  });
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="search-overlay glass-liquid glass-opacity-medium glass-blur-medium caustics-normal"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 200,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(10, 10, 15, 0.9)',
+        backdropFilter: 'blur(16px)',
+      }}
       role="dialog"
       aria-modal="true"
       aria-label="Search"
       onKeyDown={handleKeyDown}
     >
-      <div className="glass-caustics" aria-hidden="true" />
-      <div className="search-wrapper" style={{ maxWidth: '720px', margin: '0 auto', padding: '32px' }}>
-        <div className="search-wrapper__icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
-        </div>
-        <input
-          ref={inputRef}
-          type="search"
-          className="search-input glass-refractive"
-          placeholder="Search movies, shows, actors..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') onClose();
-          }}
-          autoComplete="off"
-          aria-label="Search"
-        />
+      <Glass
+        as="div"
+        material="frosted"
+        look="frosted"
+        geometry={SEARCH_GEOMETRY}
+        filterId={filter.ready ? filter.filterId : undefined}
+        style={{
+          width: '100%',
+          maxWidth: SEARCH_GEOMETRY.width,
+          height: SEARCH_GEOMETRY.height,
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {filter.ready && <SdfFilterDefinition filter={filter} />}
 
-        {loading && (
-          <div className="flex-center glass-subtle" style={{ padding: '32px', color: 'var(--text-secondary)', borderRadius: 'var(--radius-lg)' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }} aria-hidden="true">
-              <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-              <path d="M12 2a10 10 0 0 1 10 10" strokeOpacity="1" />
+        <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', height: '100%', overflow: 'auto' }}>
+          {/* Search icon */}
+          <div style={{ textAlign: 'center' }} aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ogui-color-accent)" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
             </svg>
           </div>
-        )}
 
-        {results.length > 0 && (
-          <div className="tv-row" style={{ marginTop: '24px' }} role="listbox" aria-label="Search results">
-            {results.map((item, i) => (
-              <ContentCard
-                key={`${item.media_type}-${item.id}`}
-                item={item}
-                variant="poster"
-                onClick={() => onSelect(item)}
-                onPlay={() => onPlay(item)}
-                className={i === selectedIndex ? 'focused' : ''}
-              />
-            ))}
-          </div>
-        )}
+          {/* Search input */}
+          <input
+            ref={inputRef}
+            type="search"
+            style={{
+              width: '100%',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.15)',
+              background: 'rgba(255,255,255,0.05)',
+              color: 'var(--ogui-color-text)',
+              fontSize: '1.125rem',
+              fontFamily: 'inherit',
+              outline: 'none',
+              boxSizing: 'border-box',
+            }}
+            placeholder="Search movies, shows, actors..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+            autoComplete="off"
+            aria-label="Search"
+          />
 
-        {!loading && query.length >= 2 && results.length === 0 && (
-          <div className="flex-center tv-body glass-frosted" style={{ padding: '48px', color: 'var(--text-muted)', borderRadius: 'var(--radius-lg)' }}>
-            No results found
-          </div>
-        )}
+          {loading && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px', color: 'var(--ogui-color-text-secondary)' }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }} aria-hidden="true">
+                <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                <path d="M12 2a10 10 0 0 1 10 10" strokeOpacity="1" />
+              </svg>
+            </div>
+          )}
 
-        {!query && !loading && (
-          <div className="tv-body glass-frosted" style={{ padding: '48px', color: 'var(--text-muted)', textAlign: 'center', borderRadius: 'var(--radius-lg)' }}>
-            Type to search...
-          </div>
-        )}
-      </div>
+          {results.length > 0 && (
+            <div style={{ flex: 1, overflow: 'auto' }} role="listbox" aria-label="Search results">
+              {results.map((item, i) => (
+                <ContentCard
+                  key={`${item.media_type}-${item.id}`}
+                  item={item}
+                  variant="poster"
+                  onClick={() => onSelect(item)}
+                  onPlay={() => onPlay(item)}
+                  className={i === selectedIndex ? 'focused' : ''}
+                />
+              ))}
+            </div>
+          )}
 
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+          {!loading && query.length >= 2 && results.length === 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px', color: 'var(--ogui-color-text-muted)', textAlign: 'center' }}>
+              No results found
+            </div>
+          )}
+
+          {!query && !loading && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px', color: 'var(--ogui-color-text-muted)', textAlign: 'center' }}>
+              Type to search...
+            </div>
+          )}
+        </div>
+
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </Glass>
     </div>
   );
 }
@@ -167,6 +227,13 @@ interface CommandPaletteProps {
   onAction: (action: string) => void;
 }
 
+const COMMAND_GEOMETRY: LensGeometry = {
+  kind: 'rounded-rect',
+  width: 480,
+  height: 380,
+  cornerRadius: 20,
+};
+
 export function CommandPalette({ isOpen, onClose, onAction }: CommandPaletteProps) {
   const commands = [
     { key: 'K', label: 'Search', action: 'search' },
@@ -176,49 +243,92 @@ export function CommandPalette({ isOpen, onClose, onAction }: CommandPaletteProp
     { key: 'P', label: 'Play/Resume', action: 'play' },
   ];
 
+  const filter = useSdfFilter({
+    id: 'command-palette',
+    width: COMMAND_GEOMETRY.width,
+    height: COMMAND_GEOMETRY.height,
+    geometry: COMMAND_GEOMETRY,
+    material: getMaterialPreset('frosted'),
+    quality: 'medium',
+  });
+
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="command-palette glass-liquid glass-opacity-medium glass-blur-medium caustics-normal" role="dialog" aria-modal="true" aria-label="Commands">
-        <div className="glass-caustics" aria-hidden="true" />
-        <div style={{ padding: '32px', maxWidth: '480px', margin: '0 auto' }}>
-          <h3 className="tv-title-3" style={{ marginBottom: '24px' }}>Commands</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 200,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(10, 10, 15, 0.9)',
+        backdropFilter: 'blur(16px)',
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Commands"
+    >
+      <Glass
+        as="div"
+        material="frosted"
+        look="frosted"
+        geometry={COMMAND_GEOMETRY}
+        filterId={filter.ready ? filter.filterId : undefined}
+        style={{
+          width: '100%',
+          maxWidth: COMMAND_GEOMETRY.width,
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {filter.ready && <SdfFilterDefinition filter={filter} />}
+
+        <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--ogui-color-text)' }}>
+            Commands
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {commands.map((cmd) => (
               <button
                 key={cmd.action}
-                className="btn btn-glass glass-refractive"
-                style={{ justifyContent: 'space-between', textAlign: 'left' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 20px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: 'var(--ogui-color-text)',
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.1s ease, border-color 0.1s ease',
+                }}
                 onClick={() => { onAction(cmd.action); onClose(); }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
               >
-                <span className="tv-body">{cmd.label}</span>
+                <span>{cmd.label}</span>
                 <kbd style={{
-                  background: 'var(--bg-glass)',
-                  border: '1px solid var(--border-glass)',
-                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '6px',
                   padding: '4px 10px',
                   fontFamily: 'monospace',
                   fontSize: '0.8rem',
-                  color: 'var(--text-secondary)'
+                  color: 'var(--ogui-color-text-secondary)',
                 }}>{cmd.key}</kbd>
               </button>
             ))}
           </div>
         </div>
-      </div>
-      <style>{`
-        .command-palette {
-          position: fixed;
-          inset: 0;
-          z-index: 200;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(10, 10, 15, 0.9);
-          backdrop-filter: blur(16px);
-        }
-      `}</style>
-    </>
+      </Glass>
+    </div>
   );
 }

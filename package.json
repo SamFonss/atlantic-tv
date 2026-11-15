@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@open-glass-ui/core": "file:../AppData/Local/Temp/open-glass-ui/packages/core",
+    "@open-glass-ui/react": "file:../AppData/Local/Temp/open-glass-ui/packages/react",
+    "@open-glass-ui/recipes": "file:../AppData/Local/Temp/open-glass-ui/packages/recipes",
+    "@open-glass-ui/renderers": "file:../AppData/Local/Temp/open-glass-ui/packages/renderers",
     "hls.js": "^1.7.4",
     "lucide-react": "^1.73.0",
     "react": "^19.3.1",

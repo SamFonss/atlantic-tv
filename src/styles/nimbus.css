@@ -345,6 +345,7 @@ body {
 */
 
 /* Liquid glass - premium frosted look with TRUE REFRACTION + animated caustics */
+/* Apply displacement filter to MAIN element so it affects the composited backdrop */
 .glass-liquid {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -356,22 +357,10 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-}
-
-/* REFRACTION LAYER — captures backdrop and applies SVG displacement */
-.glass-liquid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  /* Frosted glass backdrop */
+  /* TRUE LIQUID GLASS REFRACTION — on main element, affects composited backdrop */
   backdrop-filter: blur(18px) saturate(200%) contrast(105%);
   -webkit-backdrop-filter: blur(18px) saturate(200%) contrast(105%);
-  /* TRUE LIQUID GLASS REFRACTION — displaces backdrop pixels */
-  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass-refract'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.008' numOctaves='3' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='12' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass-refract");
-  pointer-events: none;
-  z-index: 0;
-  isolation: isolate;
+  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass-refract'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='30' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass-refract");
 }
 
 /* Surface highlight - catches light like real glass */
@@ -390,6 +379,16 @@ body {
   );
   pointer-events: none;
   z-index: 2;
+}
+
+/* Remove refraction from ::before - now on main element */
+.glass-liquid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Animated caustic light patterns - requires <div class="glass-caustics"></div> child */
@@ -445,21 +444,10 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-}
-
-/* REFRACTION LAYER — stronger displacement for header scrolling over content */
-.glass-liquid-strong::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  /* TRUE LIQUID GLASS REFRACTION — stronger for header over content */
   backdrop-filter: blur(16px) saturate(220%) contrast(108%);
   -webkit-backdrop-filter: blur(16px) saturate(220%) contrast(108%);
-  /* Stronger displacement scale for header passing over cards */
-  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass-refract-strong'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='18' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass-refract-strong");
-  pointer-events: none;
-  z-index: 0;
-  isolation: isolate;
+  filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquid-glass-refract-strong'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='45' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E#liquid-glass-refract-strong");
 }
 
 /* Surface highlight */
@@ -478,6 +466,16 @@ body {
   );
   pointer-events: none;
   z-index: 2;
+}
+
+/* ::before now just for caustics layer if needed */
+.glass-liquid-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Caustics for strong glass - requires <div class="glass-caustics"></div> child */
