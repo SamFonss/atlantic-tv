@@ -52,7 +52,7 @@ export function ContentCard({ item, variant = 'poster', onClick, onPlay, classNa
   const classNames = [
     'content-card',
     `content-card--${variant}`,
-    'glass-liquid distort-medium refract-normal ca-medium',
+    'glass-liquid glass-opacity-medium glass-blur-medium glass-border-normal caustics-normal',
     className,
   ].filter(Boolean).join(' ');
 
@@ -154,7 +154,7 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
   return (
     <section
       ref={ref}
-      className={`hero glass-caustic caustics-subtle ${className}`}
+      className={`hero glass-caustic caustics-normal ${className}`}
       role="region"
       aria-label={`${title} - Featured`}
       onKeyDown={handleKeyDown}

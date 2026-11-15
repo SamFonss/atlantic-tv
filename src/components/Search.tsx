@@ -83,7 +83,7 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
 
   return (
     <div
-      className="search-overlay glass-liquid distort-medium caustics-subtle"
+      className="search-overlay glass-liquid glass-opacity-medium glass-blur-medium caustics-normal"
       role="dialog"
       aria-modal="true"
       aria-label="Search"
@@ -179,7 +179,7 @@ export function CommandPalette({ isOpen, onClose, onAction }: CommandPaletteProp
 
   return (
     <>
-      <div className="command-palette glass-liquid caustics-normal" role="dialog" aria-modal="true" aria-label="Commands">
+      <div className="command-palette glass-liquid glass-opacity-medium glass-blur-medium caustics-normal" role="dialog" aria-modal="true" aria-label="Commands">
         <div style={{ padding: '32px', maxWidth: '480px', margin: '0 auto' }}>
           <h3 className="tv-title-3" style={{ marginBottom: '24px' }}>Commands</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
