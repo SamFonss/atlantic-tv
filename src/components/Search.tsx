@@ -89,6 +89,7 @@ export function Search({ isOpen, onClose, onSelect, onPlay }: SearchProps) {
       aria-label="Search"
       onKeyDown={handleKeyDown}
     >
+      <div className="glass-caustics" aria-hidden="true" />
       <div className="search-wrapper" style={{ maxWidth: '720px', margin: '0 auto', padding: '32px' }}>
         <div className="search-wrapper__icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -180,6 +181,7 @@ export function CommandPalette({ isOpen, onClose, onAction }: CommandPaletteProp
   return (
     <>
       <div className="command-palette glass-liquid glass-opacity-medium glass-blur-medium caustics-normal" role="dialog" aria-modal="true" aria-label="Commands">
+        <div className="glass-caustics" aria-hidden="true" />
         <div style={{ padding: '32px', maxWidth: '480px', margin: '0 auto' }}>
           <h3 className="tv-title-3" style={{ marginBottom: '24px' }}>Commands</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

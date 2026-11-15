@@ -77,6 +77,7 @@ export function ContentCard({ item, variant = 'poster', onClick, onPlay, classNa
         e.currentTarget.style.setProperty('--mouse-y', '50%');
       }}
     >
+      <div className="glass-caustics" aria-hidden="true" />
       {imageUrl ? (
         <img
           className="content-card__image"
@@ -154,7 +155,7 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
   return (
     <section
       ref={ref}
-      className={`hero glass-caustic caustics-normal ${className}`}
+      className={`hero glass-liquid glass-opacity-medium glass-blur-medium caustics-normal ${className}`}
       role="region"
       aria-label={`${title} - Featured`}
       onKeyDown={handleKeyDown}
@@ -170,6 +171,7 @@ export function HeroCard({ item, onPlay, onMore, className = '' }: HeroCardProps
         e.currentTarget.style.setProperty('--mouse-y', '50%');
       }}
     >
+      <div className="glass-caustics" aria-hidden="true" />
       {backdropPath ? (
         <img
           className="hero__background"

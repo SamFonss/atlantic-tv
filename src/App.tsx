@@ -259,6 +259,7 @@ function App() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: '1px solid var(--border-glass)',
       }}>
+        <div className="glass-caustics" aria-hidden="true" />
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--atlantic-400)" strokeWidth="2.5" aria-hidden="true">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -324,6 +325,7 @@ function App() {
                   minWidth: '240px', padding: '16px', borderRadius: 'var(--radius-lg)',
                   display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 100
                 }}>
+                  <div className="glass-caustics" aria-hidden="true" />
                   <div className="tv-caption" style={{ color: 'var(--text-secondary)' }}>
                     {rdUser.username} • {rdUser.type}
                   </div>
@@ -343,6 +345,7 @@ function App() {
         {loading ? (
           <div className="flex-center" style={{ height: '60vh' }}>
             <div className="glass-liquid glass-opacity-medium glass-blur-medium caustics-subtle" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', padding: '48px 64px', borderRadius: 'var(--radius-xl)' }}>
+              <div className="glass-caustics" aria-hidden="true" />
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--atlantic-400)" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
                 <circle cx="12" cy="12" r="10" strokeOpacity="0.2" />
                 <path d="M12 2a10 10 0 0 1 10 10" />
@@ -444,10 +447,12 @@ function App() {
 
       {playerOpen && !playerSrc && playerItem && (
         <div className="player-overlay glass-liquid glass-opacity-medium glass-blur-medium caustics-subtle">
+          <div className="glass-caustics" aria-hidden="true" />
           <div className="glass-liquid glass-opacity-medium glass-blur-medium caustics-subtle" style={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
             padding: '48px', textAlign: 'center', maxWidth: '480px', minWidth: '320px'
           }}>
+            <div className="glass-caustics" aria-hidden="true" />
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--atlantic-400)" strokeWidth="2" style={{ marginBottom: '24px', animation: 'spin 1s linear infinite' }}>
               <circle cx="12" cy="12" r="10" strokeOpacity="0.2" />
               <path d="M12 2a10 10 0 0 1 10 10" />
